@@ -1,44 +1,49 @@
 "use client";
+
 import { TextInput, Textarea, Button } from "@mantine/core";
-import { DatePicker } from "@mantine/dates";
+import { DateInput } from "@mantine/dates";
 import { Controller, useForm } from "react-hook-form";
-import { RegisterProyekForm, RegisterProyekSchema } from "@/schema/proyek";
+import { Proyek } from "@prisma/client";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { RegisterProyek } from "@/action/proyek";
 import { notifications } from "@mantine/notifications";
 
-export default function AddProyekForm(props: { onSuccess?: () => void }) {
+import { RegisterProyekForm, RegisterProyekSchema } from "@/schema/proyek";
+import { EditProyek } from "@/action/proyek";
+
+export default function EditProyekForm({
+  data,
+  onSuccess,
+}: {
+  data?: Proyek;
+  onSuccess?: () => void;
+}) {
   const { control, handleSubmit } = useForm<RegisterProyekForm>({
+    defaultValues: data,
     resolver: zodResolver(RegisterProyekSchema),
-    defaultValues: {
-      nama: "",
-      kode: "",
-      notes: "",
-      lokasi: "",
-    },
   });
 
-  const handleOnSubmit = async (data: RegisterProyekForm) => {
-    const res = await RegisterProyek(data);
+  const handleOnSubmit = async (credentials: RegisterProyekForm) => {
+    if (data) {
+      const res = await EditProyek(credentials, data.id);
+      if (res) {
+        return notifications.show({
+          title: "Action Failed",
+          message: res?.message,
+          color: "red",
+        });
+      }
 
-    if (res) {
-      return notifications.show({
-        title: "Action Failed",
-        message: res.message,
-        color: "red",
+      notifications.show({
+        title: "Action Success",
+        message: "Edit Proyek Berhasil",
       });
+      onSuccess && onSuccess();
     }
-
-    props.onSuccess && props.onSuccess();
-    notifications.show({
-      title: "Action Success",
-      message: "Tambah Proyek Berhasil",
-    });
   };
 
   return (
     <form
-      className={"flex flex-col space-y-6"}
+      className="flex flex-col space-y-6"
       onSubmit={handleSubmit(handleOnSubmit)}
     >
       <Controller
@@ -67,14 +72,13 @@ export default function AddProyekForm(props: { onSuccess?: () => void }) {
         name={"kode"}
         control={control}
       />
-      <div className={"w-full font-semibold"}>
-        <label className={"text-sm"}>Tanggal</label>
-        <Controller
-          render={({ field: { ...field } }) => <DatePicker {...field} />}
-          name={"tanggal"}
-          control={control}
-        />
-      </div>
+      <Controller
+        render={({ field: { ...field } }) => (
+          <DateInput {...field} placeholder="Pilih Tanggal" label={"Tanggal"} />
+        )}
+        name={"tanggal"}
+        control={control}
+      />
 
       <Controller
         render={({ field, fieldState: { error } }) => (

@@ -1,6 +1,7 @@
 "use server";
+
 import { RegisterProyekForm } from "@/schema/proyek";
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient, Prisma } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 
 export async function RegisterProyek(data: RegisterProyekForm) {
@@ -12,10 +13,12 @@ export async function RegisterProyek(data: RegisterProyekForm) {
     });
     revalidatePath("/admin/proyek");
   } catch (e) {
-    console.log(e);
-    return {
-      error: true,
-    };
+    if (e instanceof Prisma.PrismaClientKnownRequestError) {
+      return {
+        error: true,
+        message: e.message,
+      };
+    }
   }
 }
 
@@ -30,4 +33,27 @@ export async function ChangeStatusProyek(status: boolean, idProyek: number) {
     },
   });
   revalidatePath("/admin/proyek");
+}
+
+export async function EditProyek(data: RegisterProyekForm, idProyek: number) {
+  const prisma = new PrismaClient();
+
+  try {
+    await prisma.proyek.update({
+      where: {
+        id: idProyek,
+      },
+      data: {
+        ...data,
+      },
+    });
+    revalidatePath("/admin/proyek");
+  } catch (e) {
+    if (e instanceof Prisma.PrismaClientKnownRequestError) {
+      return {
+        error: true,
+        message: e.message,
+      };
+    }
+  }
 }
