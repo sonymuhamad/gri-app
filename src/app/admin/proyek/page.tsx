@@ -9,7 +9,7 @@ export default async function ProyekPage() {
   return (
     <div className={"flex flex-col space-y-6"}>
       <div className={"flex items-center justify-between"}>
-        <h4>Halaman Proyek</h4>
+        <h1 className="text-2xl font-bold">Halaman Proyek</h1>
 
         <AddProyekModal />
       </div>
