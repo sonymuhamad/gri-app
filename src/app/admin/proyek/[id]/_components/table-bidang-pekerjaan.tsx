@@ -1,5 +1,6 @@
 "use client";
 
+import { usePathname } from "next/navigation";
 import { useState } from "react";
 import Link from "next/link";
 import {
@@ -35,6 +36,7 @@ export default function TableBidangPekerjaan({
   const [opened, { open, close }] = useDisclosure(false);
   const { data, goToPage, totalPages, currentPage } =
     usePagination(dataBidangPekerjaan);
+  const pathname = usePathname();
 
   const rows = useMemo(
     () =>
@@ -45,7 +47,7 @@ export default function TableBidangPekerjaan({
           <Table.Tr key={id} className={"w-full"}>
             <Table.Td>
               <Link
-                href={`/admin/proyek/pekerjaan/${id}`}
+                href={`${pathname}/pekerjaan/${id}`}
                 className={"hover:underline"}
               >
                 {nama}
@@ -110,7 +112,7 @@ export default function TableBidangPekerjaan({
           </Table.Tr>
         );
       }),
-    [data, open]
+    [data, open, pathname]
   );
 
   return (
@@ -119,7 +121,7 @@ export default function TableBidangPekerjaan({
         position="right"
         opened={opened}
         onClose={close}
-        title="Edit Proyek"
+        title="Edit Bidang Pekerjaan"
       >
         <EditBidangPekerjaanForm
           bidangPekerjaan={selectedBidangPekerjaan}
