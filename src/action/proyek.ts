@@ -1,12 +1,11 @@
 "use server";
 
+import prisma from "@/db/db";
 import { RegisterProyekForm } from "@/schema/proyek";
 import { PrismaClient, Prisma } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 
 export async function RegisterProyek(data: RegisterProyekForm) {
-  const prisma = new PrismaClient();
-
   try {
     await prisma.proyek.create({
       data: data,
@@ -23,7 +22,6 @@ export async function RegisterProyek(data: RegisterProyekForm) {
 }
 
 export async function ChangeStatusProyek(status: boolean, idProyek: number) {
-  const prisma = new PrismaClient();
   await prisma.proyek.update({
     where: {
       id: idProyek,
@@ -36,8 +34,6 @@ export async function ChangeStatusProyek(status: boolean, idProyek: number) {
 }
 
 export async function EditProyek(data: RegisterProyekForm, idProyek: number) {
-  const prisma = new PrismaClient();
-
   try {
     await prisma.proyek.update({
       where: {

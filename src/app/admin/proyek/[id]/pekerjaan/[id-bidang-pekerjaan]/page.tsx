@@ -1,5 +1,6 @@
 import { Badge } from "@mantine/core";
-import { PrismaClient } from "@prisma/client";
+
+import prisma from "@/db/db";
 import { notFound } from "next/navigation";
 import PekerjaanSection from "./_components/pekerjaan-section";
 
@@ -8,8 +9,6 @@ export default async function DetailBidangPekerjaanPage({
 }: {
   params: { "id-bidang-pekerjaan": string };
 }) {
-  const prisma = new PrismaClient();
-
   const bidangPekerjaan = await prisma.bidang_Pekerjaan.findUnique({
     where: {
       id: Number(params["id-bidang-pekerjaan"]),

@@ -1,8 +1,8 @@
-import { PrismaClient } from "@prisma/client";
 import { notFound } from "next/navigation";
 import dayjs from "dayjs";
-import { Badge, Button } from "@mantine/core";
+import { Badge } from "@mantine/core";
 
+import prisma from "@/db/db";
 import TambahBidangPekerjaanButton from "./_components/add-button";
 import TableBidangPekerjaan from "./_components/table-bidang-pekerjaan";
 
@@ -12,8 +12,6 @@ export default async function DetailProyekPage({
   params: { id: string };
 }) {
   const { id } = params;
-
-  const prisma = new PrismaClient();
 
   const proyek = await prisma.proyek.findUnique({
     where: {

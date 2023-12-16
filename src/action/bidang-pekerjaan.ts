@@ -1,14 +1,13 @@
 "use server";
 
+import prisma from "@/db/db";
 import { RegisterBidangPekerjaanForm } from "@/schema/bidang-pekerjaan";
-import { PrismaClient, Prisma } from "@prisma/client";
+import { Prisma } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 
 export async function RegisterBidangPekerjaan(
   data: RegisterBidangPekerjaanForm
 ) {
-  const prisma = new PrismaClient();
-
   try {
     await prisma.bidang_Pekerjaan.create({
       data: data,
@@ -28,8 +27,6 @@ export async function UpdateBidangPekerjaan(
   data: RegisterBidangPekerjaanForm,
   idBidangPekerjaan: number
 ) {
-  const prisma = new PrismaClient();
-
   try {
     await prisma.bidang_Pekerjaan.update({
       where: {
@@ -54,8 +51,6 @@ export async function ChangeStatusBidangPekerjaan(
   status: boolean,
   idBidangPekerjaan: number
 ) {
-  const prisma = new PrismaClient();
-
   await prisma.bidang_Pekerjaan.update({
     where: {
       id: idBidangPekerjaan,
