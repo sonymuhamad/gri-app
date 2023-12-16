@@ -25,3 +25,5 @@ export const ROLE: ProjectRole[] = [
 export const cn = (...args: any) => {
   return twMerge(clsx(args));
 };
+
+export const USER_DATA = "gri-user-profile";

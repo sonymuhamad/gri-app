@@ -2,6 +2,7 @@ import {
   UsersIcon,
   SquaresPlusIcon,
   ClipboardIcon,
+  DocumentCheckIcon,
 } from "@heroicons/react/24/outline";
 
 type Routes = {
@@ -25,5 +26,10 @@ export const DEFAULT_ROUTE: Routes[] = [
     href: "/admin/proyek",
     icon: ClipboardIcon,
     label: "Proyek",
+  },
+  {
+    href: "/admin/report",
+    icon: DocumentCheckIcon,
+    label: "Laporan Harian",
   },
 ];

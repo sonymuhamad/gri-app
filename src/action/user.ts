@@ -1,14 +1,20 @@
 "use server";
 import { revalidatePath } from "next/cache";
 import { Prisma } from "@prisma/client";
+import bcrypt from "bcrypt";
 
 import prisma from "@/db/db";
 import { EditUserForm, RegisterUserForm } from "@/schema/user";
 
 export async function CreateUser(credentials: RegisterUserForm) {
   try {
+    const hashedPassword = await bcrypt.hash(credentials.password, 10);
+
     await prisma.user.create({
-      data: credentials,
+      data: {
+        ...credentials,
+        password: hashedPassword,
+      },
     });
     revalidatePath("/admin/user", "page");
   } catch (e) {

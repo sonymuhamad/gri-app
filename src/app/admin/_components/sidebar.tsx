@@ -1,9 +1,12 @@
 "use client";
 import { usePathname } from "next/navigation";
 import { DEFAULT_ROUTE } from "@/const/route";
+import { ArrowLeftOnRectangleIcon } from "@heroicons/react/24/outline";
 import React from "react";
 import Link from "next/link";
 import { cn } from "@/const/project";
+
+import { Logout } from "@/action/auth";
 
 export default function SideBar() {
   const pathname = usePathname();
@@ -31,6 +34,13 @@ export default function SideBar() {
               </li>
             );
           })}
+          <li
+            onClick={async () => await Logout()}
+            className="fixed bottom-10 cursor-pointer w-full space-x-3 flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 group"
+          >
+            <ArrowLeftOnRectangleIcon className="h-5 w-5" />
+            <span>Logout</span>
+          </li>
         </ul>
       </div>
     </aside>
