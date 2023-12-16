@@ -1,14 +1,18 @@
 "use server";
 
-import { RegisterPekerjaanForm } from "@/schema/pekerjaan";
-import prisma from "@/db/db";
 import { Prisma } from "@prisma/client";
 import { revalidatePath } from "next/cache";
+import prisma from "@/db/db";
 
-export async function RegisterPekerjaan(credentials: RegisterPekerjaanForm) {
+import {
+  RegisterSubPekerjaanForm,
+  SubPekerjaanForm,
+} from "@/schema/sub-pekerjaan";
+
+export async function RegisterSubPekerjaan(credentials: SubPekerjaanForm) {
   try {
-    await prisma.pekerjaan.create({
-      data: credentials,
+    await prisma.sub_Pekerjaan.create({
+      data: credentials as unknown as RegisterSubPekerjaanForm,
     });
     revalidatePath(
       "/admin/proyek/[id]/pekerjaan/[id-bidang-pekerjaan]",
@@ -24,17 +28,17 @@ export async function RegisterPekerjaan(credentials: RegisterPekerjaanForm) {
   }
 }
 
-export async function EditPekerjaan(
-  credentials: RegisterPekerjaanForm,
-  idPekerjaan: number
+export async function UpdateSubPekerjaan(
+  credentials: SubPekerjaanForm,
+  idSubPekerjaan: number
 ) {
   try {
-    await prisma.pekerjaan.update({
+    await prisma.sub_Pekerjaan.update({
       where: {
-        id: idPekerjaan,
+        id: idSubPekerjaan,
       },
       data: {
-        ...credentials,
+        ...(credentials as unknown as RegisterSubPekerjaanForm),
       },
     });
     revalidatePath(
@@ -51,28 +55,17 @@ export async function EditPekerjaan(
   }
 }
 
-export async function ChangeStatusPekerjaan(
+export async function ChangeStatusSubPekerjaan(
   status: boolean,
-  idPekerjaan: number
+  idSubPekerjaan: number
 ) {
-  await prisma.pekerjaan.update({
+  await prisma.sub_Pekerjaan.update({
     where: {
-      id: idPekerjaan,
+      id: idSubPekerjaan,
     },
     data: {
       is_active: status,
     },
   });
   revalidatePath("/admin/proyek/[id]/pekerjaan/[id-bidang-pekerjaan]", "page");
-}
-
-export async function GetPekerjaan(idPekerjaan: number) {
-  await prisma.pekerjaan.findUnique({
-    where: {
-      id: idPekerjaan,
-    },
-    include: {
-      sub_pekerjaan: true,
-    },
-  });
 }

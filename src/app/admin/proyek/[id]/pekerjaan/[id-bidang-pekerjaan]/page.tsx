@@ -16,7 +16,15 @@ export default async function DetailBidangPekerjaanPage({
     },
     include: {
       proyek: true,
-      pekerjaan: true,
+      pekerjaan: {
+        include: {
+          sub_pekerjaan: {
+            include: {
+              satuan: true,
+            },
+          },
+        },
+      },
     },
   });
 
@@ -27,7 +35,7 @@ export default async function DetailBidangPekerjaanPage({
   const { nama, pekerjaan, proyek, kode, is_active, notes } = bidangPekerjaan;
 
   return (
-    <div className="flex flex-col space-y-12">
+    <div className="flex flex-col space-y-12 h-full">
       <section className="bg-white rounded-lg shadow-md p-8 space-y-6  w-full">
         <h1 className="text-2xl font-bold text-gray-800 mb-4">{proyek.nama}</h1>
         <div className="flex flex-col">
