@@ -6,9 +6,15 @@ export default function useSearch<T extends Object>(data: T[]) {
 
   const values = useMemo(() => {
     return data.filter((dt) => {
-      return Object.values(dt).some((value) =>
-        value.toString().toLowerCase().includes(debouncedQuery.toLowerCase()),
-      );
+      return Object.values(dt).some((value) => {
+        if (value)
+          return value
+            .toString()
+            .toLowerCase()
+            .includes(debouncedQuery.toLowerCase());
+
+        return false;
+      });
     });
   }, [data, debouncedQuery]);
 

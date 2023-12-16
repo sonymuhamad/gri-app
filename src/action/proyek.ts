@@ -53,3 +53,7 @@ export async function EditProyek(data: RegisterProyekForm, idProyek: number) {
     }
   }
 }
+
+export async function GetProyek() {
+  return await prisma.proyek.findMany();
+}
