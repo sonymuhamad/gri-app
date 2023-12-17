@@ -1,7 +1,8 @@
 name: "Install Dependencies"
 description: "Project dependencies installment"
 runs:
-  using: "composite"
+  name: Build Next.js
+  runs-on: self-hosted
   steps:
     - name: Install Node.js
       uses: actions/setup-node@v4
