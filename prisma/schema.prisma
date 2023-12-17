@@ -1,0 +1,103 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+model User {
+  id             Int              @id @default(autoincrement())
+  email          String           @unique
+  name           String
+  password       String
+  role           Role             @default(ADMIN)
+  is_active      Boolean          @default(true)
+  created_at     DateTime         @default(now())
+  updated_at     DateTime         @updatedAt
+  id_proyek      Int?
+  proyek         Proyek?          @relation(fields: [id_proyek], references: [id])
+  laporan_harian Laporan_Harian[]
+}
+
+model Proyek {
+  id               Int                @id @default(autoincrement())
+  user             User[]
+  nama             String
+  kode             String             @unique
+  tanggal          DateTime
+  created_at       DateTime           @default(now())
+  updated_at       DateTime           @updatedAt
+  lokasi           String             @db.Text
+  notes            String             @db.Text
+  is_active        Boolean            @default(true)
+  bidang_pekerjaan Bidang_Pekerjaan[]
+}
+
+model Bidang_Pekerjaan {
+  id         Int         @id @default(autoincrement())
+  nama       String
+  kode       String      @unique
+  id_proyek  Int
+  proyek     Proyek      @relation(fields: [id_proyek], references: [id])
+  created_at DateTime    @default(now())
+  updated_at DateTime    @updatedAt
+  notes      String      @db.Text
+  is_active  Boolean     @default(true)
+  pekerjaan  Pekerjaan[]
+}
+
+model Pekerjaan {
+  id                  Int              @id @default(autoincrement())
+  id_bidang_pekerjaan Int
+  bidang_pekerjaan    Bidang_Pekerjaan @relation(fields: [id_bidang_pekerjaan], references: [id])
+  nama                String
+  is_active           Boolean          @default(true)
+  notes               String           @db.Text
+  created_at          DateTime         @default(now())
+  updated_at          DateTime         @updatedAt
+  sub_pekerjaan       Sub_Pekerjaan[]
+}
+
+model Sub_Pekerjaan {
+  id             Int              @id @default(autoincrement())
+  id_pekerjaan   Int
+  pekerjaan      Pekerjaan        @relation(fields: [id_pekerjaan], references: [id])
+  nama           String
+  notes          String           @db.Text
+  target_volume  Float
+  is_active      Boolean          @default(true)
+  id_satuan      Int
+  satuan         Satuan           @relation(fields: [id_satuan], references: [id])
+  created_at     DateTime         @default(now())
+  updated_at     DateTime         @updatedAt
+  laporan_harian Laporan_Harian[]
+}
+
+model Satuan {
+  id            Int             @id @default(autoincrement())
+  nama          String
+  created_at    DateTime        @default(now())
+  sub_pekerjaan Sub_Pekerjaan[]
+}
+
+model Laporan_Harian {
+  id               Int           @id @default(autoincrement())
+  id_sub_pekerjaan Int
+  sub_pekerjaan    Sub_Pekerjaan @relation(fields: [id_sub_pekerjaan], references: [id])
+  volume           Float
+  notes            String        @db.Text
+  id_user          Int
+  user             User          @relation(fields: [id_user], references: [id])
+  created_at       DateTime      @default(now())
+  updated_at       DateTime      @updatedAt
+}
