@@ -12,10 +12,10 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Install dependencies
-        run: pnpm install
+        run: npm install
 
       - name: Running Linter
-        run: pnpm run lint -- --max-warnings=0
+        run: npm run lint -- --max-warnings=0
 
       - name: Type Checking
-        run: pnpm tsc --noEmit
+        run: npm tsc --noEmit
