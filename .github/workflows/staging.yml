@@ -1,0 +1,30 @@
+name: Staging Pipeline
+run-name: ${{ github.ref_name }} Pipeline - Triggered by ${{ github.actor }}
+on:
+  push:
+    tags:
+      - "release-staging-*"
+
+jobs:
+  build-staging-next:
+    name: Build Next.js
+    runs-on: self-hosted
+
+    env:
+      NEXT_PUBLIC_AXIOS_BASE_URL: "https://api.staging.satudental.com"
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install tar
+        run: apk add --no-cache tar
+
+      - name: Install dependencies
+        uses: ./.github/actions/install-dependencies
+
+      - name: Build with Next.js
+        run: pnpm run build
+
+      - name: Restart Service
+        run: pm2 restart example
