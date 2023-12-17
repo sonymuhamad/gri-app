@@ -1,0 +1,30 @@
+name: Staging Pipeline
+run-name: ${{ github.ref_name }} Pipeline - Triggered by ${{ github.actor }}
+on:
+  push:
+    tags:
+      - "release-staging-*"
+
+jobs:
+  build-staging-next:
+    name: Build Next.js
+    runs-on: self-hosted
+
+    env:
+      NEXT_PUBLIC_AXIOS_BASE_URL: "https://api.staging.satudental.com"
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Prisma Migrate
+        run: npx prisma migrate deploy
+
+      - name: Build with Next.js
+        run: npm run build
+
+      - name: Restart Service
+        run: pm2 restart gri-app

@@ -1,0 +1,18 @@
+name: PR Pipeline
+run-name: PR ${{ github.ref_name }} Pipeline - Triggered by ${{ github.actor }}
+on: pull_request
+
+jobs:
+  lint:
+    name: Dependency Setup and Linting Analysis
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Running Linter
+        run: npm run lint -- --max-warnings=0
