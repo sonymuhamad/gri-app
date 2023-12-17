@@ -21,7 +21,7 @@ export default function FormEditUser({
     defaultValues: {
       name: user?.name,
       email: user?.email,
-      role: Role.ADMIN,
+      role: user?.role,
     },
   });
 
