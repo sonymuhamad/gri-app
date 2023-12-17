@@ -1,14 +1,14 @@
 import { NextResponse } from "next/server";
 import { NextRequest } from "next/server";
-// import { USER_DATA } from "./const/project";
+import { USER_DATA } from "./const/project";
 
 export function middleware(request: NextRequest) {
-  // const session = request.cookies.get(USER_DATA);
-  // if (request.nextUrl.pathname.startsWith("/admin")) {
-  //   if (!session) {
-  //     return NextResponse.redirect(new URL("/", request.url));
-  //   }
-  // }
+  const session = request.cookies.get(USER_DATA);
+  if (request.nextUrl.pathname.startsWith("/admin")) {
+    if (!session) {
+      return NextResponse.redirect(new URL("/", request.url));
+    }
+  }
 
   return NextResponse.next();
 }
