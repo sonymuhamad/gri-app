@@ -17,11 +17,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Install tar
-        run: apk add --no-cache tar
-
       - name: Install dependencies
-        uses: ./.github/actions/install-dependencies
+        run: pnpm install
 
       - name: Build with Next.js
         run: pnpm run build

@@ -12,7 +12,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Install dependencies
-        uses: ./.github/actions/install-dependencies
+        run: pnpm install
 
       - name: Running Linter
         run: pnpm run lint -- --max-warnings=0
