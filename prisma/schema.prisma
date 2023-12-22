@@ -16,17 +16,17 @@ enum Role {
 }
 
 model User {
-  id             Int              @id @default(autoincrement())
-  email          String           @unique
-  name           String
-  password       String
-  role           Role             @default(ADMIN)
-  is_active      Boolean          @default(true)
-  created_at     DateTime         @default(now())
-  updated_at     DateTime         @updatedAt
-  id_proyek      Int?
-  proyek         Proyek?          @relation(fields: [id_proyek], references: [id])
-  laporan_harian Laporan_Harian[]
+  id         Int       @id @default(autoincrement())
+  email      String    @unique
+  name       String
+  password   String
+  role       Role      @default(ADMIN)
+  is_active  Boolean   @default(true)
+  created_at DateTime  @default(now())
+  updated_at DateTime  @updatedAt
+  id_proyek  Int?
+  proyek     Proyek?   @relation(fields: [id_proyek], references: [id])
+  laporan    Laporan[]
 }
 
 model Proyek {
@@ -54,6 +54,7 @@ model Bidang_Pekerjaan {
   notes      String      @db.Text
   is_active  Boolean     @default(true)
   pekerjaan  Pekerjaan[]
+  laporan    Laporan[]
 }
 
 model Pekerjaan {
@@ -96,8 +97,21 @@ model Laporan_Harian {
   sub_pekerjaan    Sub_Pekerjaan @relation(fields: [id_sub_pekerjaan], references: [id])
   volume           Float
   notes            String        @db.Text
-  id_user          Int
-  user             User          @relation(fields: [id_user], references: [id])
   created_at       DateTime      @default(now())
   updated_at       DateTime      @updatedAt
+  file_url         String
+  id_laporan       Int
+  laporan          Laporan       @relation(fields: [id_laporan], references: [id])
+}
+
+model Laporan {
+  id                  Int              @id @default(autoincrement())
+  user                User             @relation(fields: [id_user], references: [id])
+  id_user             Int
+  notes               String           @db.Text
+  id_bidang_pekerjaan Int
+  bidang_pekerjaan    Bidang_Pekerjaan @relation(fields: [id_bidang_pekerjaan], references: [id])
+  created_at          DateTime         @default(now())
+  updated_at          DateTime         @updatedAt
+  laporan_harian      Laporan_Harian[]
 }
