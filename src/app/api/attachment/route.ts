@@ -6,6 +6,12 @@ import { stat, mkdir, writeFile } from "fs/promises";
 import jwt from "jsonwebtoken";
 import { User } from "@prisma/client";
 
+export const config = {
+  api: {
+    bodyParser: false,
+  },
+};
+
 export async function POST(req: NextRequest) {
   const data = await req.formData();
   const authorization = req.headers.get("Authorization");
