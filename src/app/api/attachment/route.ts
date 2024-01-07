@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 
 import mime from "mime";
 import jwt from "jsonwebtoken";
@@ -13,13 +13,9 @@ const s3 = new S3Client({
   },
 });
 
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-};
+export const dynamic = "force-dynamic";
 
-export async function POST(req: NextRequest) {
+export async function POST(req: Request) {
   const data = await req.formData();
   const authorization = req.headers.get("Authorization");
   const token = authorization?.split(" ")[1];
