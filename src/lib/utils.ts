@@ -11,5 +11,29 @@ export function generateRandomString(length: number) {
   return result;
 }
 
-// Usage:
-const randomString = generateRandomString(10);
+export function createUrlWithQueryParams(
+  path: string,
+  queryParams: { [key: string]: string | string[] | number | null | undefined }
+): string {
+  const urlParams = new URLSearchParams();
+
+  Object.entries(queryParams).map(([k, v]) => {
+    if (v) {
+      urlParams.append(k, v.toString());
+    }
+  });
+
+  const queryString = urlParams.toString();
+
+  return queryString ? `${path}?${queryString}` : path;
+}
+
+export function getTodayAndTomorrow() {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const tomorrow = new Date();
+  tomorrow.setHours(0, 0, 0, 0);
+  tomorrow.setDate(tomorrow.getDate() + 1);
+
+  return [today, tomorrow];
+}

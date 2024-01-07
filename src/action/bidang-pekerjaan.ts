@@ -61,3 +61,11 @@ export async function ChangeStatusBidangPekerjaan(
   });
   revalidatePath("/admin/proyek/[id]", "page");
 }
+
+export async function GetBidangPekerjaan(idProyek?: number) {
+  return await prisma.bidang_Pekerjaan.findMany({
+    where: {
+      id_proyek: idProyek,
+    },
+  });
+}

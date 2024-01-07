@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 import mime from "mime";
 import jwt from "jsonwebtoken";
@@ -13,9 +13,7 @@ const s3 = new S3Client({
   },
 });
 
-export const dynamic = "force-dynamic";
-
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
   const data = await req.formData();
   const authorization = req.headers.get("Authorization");
   const token = authorization?.split(" ")[1];
@@ -46,7 +44,7 @@ export async function POST(req: Request) {
     await s3.send(
       new PutObjectCommand({
         Bucket: "gri-apps",
-        Key: `report/${filename}`,
+        Key: `absence/${filename}`,
         Body: buffer,
         ACL: "public-read",
       })
