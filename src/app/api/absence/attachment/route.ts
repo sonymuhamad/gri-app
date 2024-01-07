@@ -13,12 +13,6 @@ const s3 = new S3Client({
   },
 });
 
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-};
-
 export async function POST(req: NextRequest) {
   const data = await req.formData();
   const authorization = req.headers.get("Authorization");
