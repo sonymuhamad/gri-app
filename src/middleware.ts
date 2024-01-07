@@ -26,6 +26,10 @@ export function middleware(request: NextRequest) {
     }
   }
 
+  if (pathname === "/" && session) {
+    return NextResponse.redirect(new URL("/admin/dashboard", request.url));
+  }
+
   return NextResponse.next();
 }
 

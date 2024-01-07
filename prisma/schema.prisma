@@ -27,6 +27,7 @@ model User {
   id_proyek  Int?
   proyek     Proyek?   @relation(fields: [id_proyek], references: [id])
   laporan    Laporan[]
+  Absence    Absence[]
 }
 
 model Proyek {
@@ -114,4 +115,14 @@ model Laporan {
   created_at          DateTime         @default(now())
   updated_at          DateTime         @updatedAt
   laporan_harian      Laporan_Harian[]
+}
+
+model Absence {
+  id                 Int      @id @default(autoincrement())
+  user               User     @relation(fields: [id_user], references: [id])
+  id_user            Int
+  clock_in_file_url  String
+  clock_out_file_url String?
+  created_at         DateTime @default(now())
+  updated_at         DateTime @updatedAt
 }

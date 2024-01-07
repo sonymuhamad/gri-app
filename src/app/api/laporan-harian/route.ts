@@ -73,3 +73,56 @@ export async function POST(req: NextRequest) {
     }
   }
 }
+
+export async function GET(req: NextRequest) {
+  const authorization = req.headers.get("Authorization");
+  const token = authorization?.split(" ")[1];
+  const searchParams = req.nextUrl.searchParams;
+  const tgl_query = searchParams.get("tanggal");
+
+  if (!tgl_query) {
+    return NextResponse.json(
+      {
+        ok: false,
+        message: "Tanggal in query params is required",
+      },
+      { status: 400 }
+    );
+  }
+
+  const [day, month, years] = tgl_query.split("/");
+  const queryDate = new Date(Number(years), Number(month) - 1, Number(day));
+  const queryDatePlusOne = new Date(
+    Number(years),
+    Number(month) - 1,
+    Number(day) + 1
+  );
+
+  let userId: number;
+  try {
+    const credentials = jwt.verify(
+      token!,
+      process.env.SECRET_KEY as string
+    ) as User;
+    userId = credentials.id;
+  } catch (e) {
+    return NextResponse.json(
+      { ok: false, message: "Invalid Token" },
+      { status: 401 }
+    );
+  }
+
+  const laporan = await prisma.laporan.findMany({
+    where: {
+      created_at: {
+        gte: queryDate.toISOString(),
+        lt: queryDatePlusOne.toISOString(),
+      },
+    },
+  });
+
+  return NextResponse.json({
+    ok: true,
+    data: laporan,
+  });
+}

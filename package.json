@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.485.0",
     "@heroicons/react": "^2.0.18",
     "@hookform/resolvers": "^3.3.2",
     "@mantine/core": "^7.3.1",
@@ -20,10 +21,12 @@
     "@supabase/supabase-js": "^2.39.1",
     "@types/bcrypt": "^5.0.2",
     "@types/jsonwebtoken": "^9.0.5",
+    "aws-sdk": "^2.1531.0",
     "bcrypt": "^5.1.1",
     "clsx": "^2.0.0",
     "dayjs": "^1.11.10",
     "jsonwebtoken": "^9.0.2",
+    "lz-string": "^1.5.0",
     "mime": "^4.0.1",
     "next": "14.0.4",
     "prisma": "^5.7.0",
@@ -36,7 +39,7 @@
   },
   "devDependencies": {
     "@types/formidable": "^3.4.5",
-    "@types/node": "^20",
+    "@types/node": "^20.10.6",
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "autoprefixer": "^10.0.1",

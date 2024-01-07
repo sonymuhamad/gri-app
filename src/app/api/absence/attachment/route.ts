@@ -50,7 +50,7 @@ export async function POST(req: NextRequest) {
     await s3.send(
       new PutObjectCommand({
         Bucket: "gri-apps",
-        Key: `report/${filename}`,
+        Key: `absence/${filename}`,
         Body: buffer,
         ACL: "public-read",
       })
