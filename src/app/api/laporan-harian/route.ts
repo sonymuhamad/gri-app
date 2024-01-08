@@ -112,17 +112,99 @@ export async function GET(req: NextRequest) {
     );
   }
 
-  const laporan = await prisma.laporan.findMany({
+  const pekerjaan = await prisma.pekerjaan.findMany({
     where: {
-      created_at: {
-        gte: queryDate.toISOString(),
-        lt: queryDatePlusOne.toISOString(),
+      sub_pekerjaan: {
+        some: {
+          laporan_harian: {
+            some: {
+              created_at: {
+                gte: queryDate.toISOString(),
+                lt: queryDatePlusOne.toISOString(),
+              },
+              laporan: {
+                id_user: userId,
+              },
+            },
+          },
+        },
+      },
+    },
+    select: {
+      id: true,
+      nama: true,
+      sub_pekerjaan: {
+        where: {
+          laporan_harian: {
+            some: {
+              created_at: {
+                gte: queryDate.toISOString(),
+                lt: queryDatePlusOne.toISOString(),
+              },
+              laporan: {
+                id_user: userId,
+              },
+            },
+          },
+        },
+        select: {
+          id: true,
+          nama: true,
+          target_volume: true,
+          satuan: true,
+          laporan_harian: {
+            where: {
+              created_at: {
+                gte: queryDate.toISOString(),
+                lt: queryDatePlusOne.toISOString(),
+              },
+              laporan: {
+                id_user: userId,
+              },
+            },
+            include: {
+              laporan: {
+                include: {
+                  user: true,
+                },
+              },
+            },
+          },
+        },
       },
     },
   });
 
+  const pekerjaans = pekerjaan.map(({ id, nama, sub_pekerjaan }) => {
+    const laporans: any[] = [];
+
+    sub_pekerjaan.forEach(({ nama, target_volume, satuan, laporan_harian }) => {
+      laporan_harian.forEach(
+        ({ volume, notes, id, file_url, created_at, laporan: { user } }) => {
+          laporans.push({
+            id_laporan: id,
+            actual: volume,
+            file_url,
+            nama_sub_pekerjaan: nama,
+            target_volume,
+            satuan: satuan.nama,
+            pic: user.name,
+            created_at,
+            notes,
+          });
+        }
+      );
+    });
+
+    return {
+      id,
+      nama_pekerjaan: nama,
+      laporan_harian: laporans,
+    };
+  });
+
   return NextResponse.json({
     ok: true,
-    data: laporan,
+    data: pekerjaans,
   });
 }
