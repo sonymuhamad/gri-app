@@ -4,6 +4,7 @@ import prisma from "@/db/db";
 import jwt from "jsonwebtoken";
 import { User } from "@prisma/client";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
+import { isValidDate } from "@/lib/utils";
 
 type ReqBody = {
   id_bidang_pekerjaan: number;
@@ -87,6 +88,18 @@ export async function GET(req: NextRequest) {
         message: "Tanggal in query params is required",
       },
       { status: 400 }
+    );
+  }
+
+  if (!isValidDate(tgl_query)) {
+    return NextResponse.json(
+      {
+        ok: false,
+        message: "Invalid date format, it must be dd/mm/yyyy",
+      },
+      {
+        status: 400,
+      }
     );
   }
 
