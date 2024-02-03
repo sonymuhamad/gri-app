@@ -57,3 +57,27 @@ export async function EditProyek(data: RegisterProyekForm, idProyek: number) {
 export async function GetProyek() {
   return await prisma.proyek.findMany();
 }
+
+export async function GetDetailProyek(id?: number) {
+  return await prisma.proyek.findUnique({
+    where: {
+      id: Number(id),
+    },
+    include: {
+      bidang_pekerjaan: {
+        include: {
+          pekerjaan: {
+            include: {
+              sub_pekerjaan: {
+                include: {
+                  satuan: true,
+                  laporan_harian: true,
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  });
+}

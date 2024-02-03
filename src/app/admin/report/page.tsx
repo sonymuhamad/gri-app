@@ -4,6 +4,7 @@ import { decompressFromEncodedURIComponent } from "lz-string";
 import { Bidang_Pekerjaan, Proyek } from "@prisma/client";
 import BidangPekerjaanFilter from "./_components/bidang-pekerjaan-filter";
 import TableReport from "./_components/table-report";
+import DownloadExcelSection from "./_components/download-excel";
 
 export default async function ReportPage({
   searchParams: { p, b },
@@ -59,6 +60,7 @@ export default async function ReportPage({
       <div className="space-x-12 flex flex-row">
         <ProyekFilter />
         <BidangPekerjaanFilter />
+        <DownloadExcelSection />
       </div>
 
       <TableReport laporan={laporan} />
