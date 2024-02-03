@@ -100,9 +100,6 @@ export async function GET(req: NextRequest) {
       },
       id_user: userId,
     },
-    select: {
-      user: true,
-    },
   });
 
   if (!absense) {
@@ -120,6 +117,7 @@ export async function GET(req: NextRequest) {
   return NextResponse.json({
     ok: true,
     message: "Anda sudah absen hari ini",
-    data: absense.user,
+    clock_in: true,
+    clock_out: !!absense.clock_out_file_url,
   });
 }
