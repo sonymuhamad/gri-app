@@ -107,6 +107,8 @@ export async function GET(req: NextRequest) {
       {
         ok: false,
         message: "Anda belum absen hari ini",
+        clock_in: false,
+        clock_out: false,
       },
       {
         status: 404,
