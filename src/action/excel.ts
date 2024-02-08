@@ -350,7 +350,7 @@ export async function DownloadExcel({ proyek }: { proyek: Proyek | null }) {
   const url = window.URL.createObjectURL(blob);
   const a = document.createElement("a");
   a.href = url;
-  a.download = "example.xlsx";
+  a.download = `${proyek.nama}-${new Date(proyek.tanggal).toDateString()}.xlsx`;
   a.click();
   window.URL.revokeObjectURL(url);
 }
