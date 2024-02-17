@@ -69,3 +69,29 @@ export async function ChangeStatusSubPekerjaan(
   });
   revalidatePath("/admin/proyek/[id]/pekerjaan/[id-bidang-pekerjaan]", "page");
 }
+
+export async function GetSubPekerjaanByProyekID(idProyek: number) {
+  return await prisma.sub_Pekerjaan.findMany({
+    where: {
+      pekerjaan: {
+        bidang_pekerjaan: {
+          proyek: {
+            id: idProyek,
+          },
+        },
+      },
+    },
+    include: {
+      pekerjaan: {
+        include: {
+          bidang_pekerjaan: {
+            include: {
+              proyek: true,
+            },
+          },
+        },
+      },
+      laporan_harian: true,
+    },
+  });
+}
