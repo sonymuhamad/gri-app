@@ -62,3 +62,17 @@ export const toDataURL = (url: string) => {
 
   return promise;
 };
+
+export function generateRandomNumber(): number {
+  // Get current date and time
+  const currentTime: Date = new Date();
+  const day: number = currentTime.getDate(); // Day of the month (1-31)
+  const hour: number = currentTime.getHours(); // Hour of the day (0-23)
+
+  // Use day and hour to set seed for random number generator
+  const seed: number = day * 24 + hour;
+  const random: number = Math.floor(Math.random() * 10) + 1; // Random number between 1 and 10
+
+  // Generate and return random number
+  return random;
+}

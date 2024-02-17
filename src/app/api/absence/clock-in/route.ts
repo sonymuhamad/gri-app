@@ -1,12 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import jwt from "jsonwebtoken";
 
-import { getTodayAndTomorrow } from "@/lib/utils";
+import { getTodayAndTomorrow, generateRandomNumber } from "@/lib/utils";
 import prisma from "@/db/db";
 import { User } from "@prisma/client";
 
 type ReqBody = {
   file_url?: string;
+  pose?: number;
 };
 
 export async function POST(req: NextRequest) {
@@ -59,10 +60,18 @@ export async function POST(req: NextRequest) {
     });
   }
 
+  if (!data.pose) {
+    return NextResponse.json({
+      ok: false,
+      message: "Pose is required",
+    });
+  }
+
   await prisma.absence.create({
     data: {
       clock_in_file_url: data.file_url,
       id_user: userId,
+      pose: data.pose,
     },
   });
 
@@ -109,6 +118,9 @@ export async function GET(req: NextRequest) {
         message: "Anda belum absen hari ini",
         clock_in: false,
         clock_out: false,
+        clock_in_at: null,
+        clock_out_at: null,
+        pose: generateRandomNumber(),
       },
       {
         status: 404,
@@ -121,5 +133,8 @@ export async function GET(req: NextRequest) {
     message: "Anda sudah absen hari ini",
     clock_in: true,
     clock_out: !!absense.clock_out_file_url,
+    clock_in_at: absense.created_at,
+    clock_out_at: absense.clock_out_at,
+    pose: absense.pose,
   });
 }

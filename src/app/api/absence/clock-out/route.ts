@@ -7,6 +7,7 @@ import { getTodayAndTomorrow } from "@/lib/utils";
 
 type ReqBody = {
   file_url?: string;
+  pose?: number;
 };
 
 export async function POST(req: NextRequest) {
@@ -41,6 +42,7 @@ export async function POST(req: NextRequest) {
       user: true,
       id: true,
       clock_out_file_url: true,
+      pose: true,
     },
   });
 
@@ -63,6 +65,18 @@ export async function POST(req: NextRequest) {
     });
   }
 
+  if (!data.pose) {
+    return NextResponse.json(
+      {
+        ok: false,
+        message: "Pose is required",
+      },
+      {
+        status: 400,
+      }
+    );
+  }
+
   if (absense.clock_out_file_url) {
     return NextResponse.json(
       {
@@ -75,12 +89,25 @@ export async function POST(req: NextRequest) {
     );
   }
 
+  if (Number(data.pose) !== absense.pose) {
+    return NextResponse.json(
+      {
+        ok: false,
+        message: "Pose tidak sama",
+      },
+      {
+        status: 422,
+      }
+    );
+  }
+
   await prisma.absence.update({
     where: {
       id: absense.id,
     },
     data: {
       clock_out_file_url: data.file_url,
+      clock_out_at: new Date(),
     },
   });
 

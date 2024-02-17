@@ -118,11 +118,13 @@ model Laporan {
 }
 
 model Absence {
-  id                 Int      @id @default(autoincrement())
-  user               User     @relation(fields: [id_user], references: [id])
+  id                 Int       @id @default(autoincrement())
+  user               User      @relation(fields: [id_user], references: [id])
   id_user            Int
   clock_in_file_url  String
   clock_out_file_url String?
-  created_at         DateTime @default(now())
-  updated_at         DateTime @updatedAt
+  created_at         DateTime  @default(now())
+  updated_at         DateTime  @updatedAt
+  clock_out_at       DateTime?
+  pose               Int?
 }
