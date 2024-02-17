@@ -161,10 +161,10 @@ export async function DownloadExcel({ proyek }: { proyek: Proyek | null }) {
   setMergedCellsBorder(2, 11);
   setMergedCellsBorder(2, 14);
 
-  await addImage("/patra.png", 250, 50, 1.5);
-  await addImage("/talya.png", 200, 50, 6.5);
-  await addImage("/abipraya.png", 65, 50, 13.25);
-  await addImage("/logo-gri.png", 65, 50, 14.5);
+  // await addImage("/patra.png", 250, 50, 1.5);
+  // await addImage("/talya.png", 200, 50, 6.5);
+  // await addImage("/abipraya.png", 65, 50, 13.25);
+  // await addImage("/logo-gri.png", 65, 50, 14.5);
 
   addText(2, 11, "LAPORAN PROGRESS MINGGUAN", 14, true);
 
@@ -342,6 +342,12 @@ export async function DownloadExcel({ proyek }: { proyek: Proyek | null }) {
     addText(row, 16, `0.00%`, 9, true, "right");
     row++;
   });
+
+  row++;
+
+  mergeCellsAndSetBorder(`B${row}:F${row + 5}`, `B${row}`);
+  mergeCellsAndSetBorder(`G${row}:K${row + 5}`, `G${row}`);
+  mergeCellsAndSetBorder(`L${row}:P${row + 5}`, `L${row}`);
 
   const buffer = await workbook.xlsx.writeBuffer();
   const blob = new Blob([buffer], {
