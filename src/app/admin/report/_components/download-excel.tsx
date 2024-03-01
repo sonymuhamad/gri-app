@@ -8,6 +8,7 @@ import { useEffect, useMemo, useState } from "react";
 
 import { Button } from "@mantine/core";
 import { DownloadExcel } from "@/action/excel";
+import { addOneDay, substractOneDay } from "@/lib/utils";
 
 type Proyek = Prisma.ProyekGetPayload<{
   include: {
@@ -74,8 +75,8 @@ export default function DownloadExcelSection() {
       if (value?.id) {
         const proyek = await GetDetailProyekWithDateFilter(
           value?.id,
-          startTime,
-          endTime
+          substractOneDay(startTime),
+          addOneDay(endTime)
         );
         setProyek(proyek);
       }
