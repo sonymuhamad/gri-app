@@ -9,7 +9,23 @@ import {
   SubPekerjaanForm,
 } from "@/schema/sub-pekerjaan";
 
-export async function RegisterSubPekerjaan(credentials: SubPekerjaanForm) {
+export async function RegisterSubPekerjaan(
+  credentials: SubPekerjaanForm,
+  idProyek: number
+) {
+  const subPekerjaan = await GetSubPekerjaanByProyekID(idProyek);
+
+  const currentTotalBobot = subPekerjaan.reduce((prev, current) => {
+    return prev + (current.bobot ?? 0);
+  }, 0);
+
+  if (currentTotalBobot + credentials.bobot > 100) {
+    return {
+      error: true,
+      message: "Bobot pekerjaan di Proyek ini sudah melebihi 100%",
+    };
+  }
+
   try {
     await prisma.sub_Pekerjaan.create({
       data: credentials as unknown as RegisterSubPekerjaanForm,
@@ -30,8 +46,35 @@ export async function RegisterSubPekerjaan(credentials: SubPekerjaanForm) {
 
 export async function UpdateSubPekerjaan(
   credentials: SubPekerjaanForm,
-  idSubPekerjaan: number
+  idSubPekerjaan: number,
+  idProyek: number
 ) {
+  const subPekerjaan = await prisma.sub_Pekerjaan.findUnique({
+    where: {
+      id: idSubPekerjaan,
+    },
+  });
+
+  if (!subPekerjaan) {
+    return {
+      error: true,
+      message: "Pekerjaan not found",
+    };
+  }
+
+  const subPekerjaans = await GetSubPekerjaanByProyekID(idProyek);
+
+  const currentTotalBobot = subPekerjaans.reduce((prev, current) => {
+    return prev + (current.bobot ?? 0);
+  }, 0);
+
+  if (currentTotalBobot - (subPekerjaan.bobot ?? 0) + credentials.bobot > 100) {
+    return {
+      error: true,
+      message: "Bobot pekerjaan di Proyek ini sudah melebihi 100%",
+    };
+  }
+
   try {
     await prisma.sub_Pekerjaan.update({
       where: {

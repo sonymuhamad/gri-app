@@ -21,6 +21,14 @@ export const SubPekerjaanSchema = z.object({
     .refine((value) => value !== undefined, {
       message: "Target Volume is Required",
     }),
+  bobot: z
+    .number({ required_error: "Bobot is Required" })
+    .refine((value) => value !== undefined, {
+      message: "Bobot is Required",
+    })
+    .refine((value) => !(value > 100), {
+      message: "Bobot tidak boleh lebih dari 100 persen",
+    }),
   notes: z.string(),
 });
 

@@ -77,7 +77,7 @@ function EachSubPekerjaan({
 }: {
   subPekerjaan: Pekerjaan["sub_pekerjaan"][0];
 }) {
-  const { nama, satuan, is_active, target_volume, notes } = subPekerjaan;
+  const { nama, satuan, is_active, target_volume, notes, bobot } = subPekerjaan;
 
   return (
     <div className="flex text-sm flex-col space-y-3 shadow-md p-3">
@@ -90,7 +90,7 @@ function EachSubPekerjaan({
         </div>
         <EditSubPekerjaan subPekerjaan={subPekerjaan} />
       </div>
-      <div className="flex flex-row space-x-6">
+      <div className="flex flex-row space-x-12">
         <div className="flex flex-col">
           <label className="text-gray-400 font-semibold">Target Volume</label>
           <span className="text-gray-700">
@@ -98,9 +98,13 @@ function EachSubPekerjaan({
           </span>
         </div>
         <div className="flex flex-col">
-          <label className="text-gray-400 font-semibold">Catatan</label>
-          <span className="text-gray-700">{notes}</span>
+          <label className="text-gray-400 font-semibold">Bobot Pekerjaan</label>
+          <span className="text-gray-700">{bobot} %</span>
         </div>
+      </div>
+      <div className="flex flex-col">
+        <label className="text-gray-400 font-semibold">Catatan</label>
+        <span className="text-gray-700">{notes ? notes : "---"}</span>
       </div>
     </div>
   );

@@ -9,6 +9,7 @@ import { Prisma } from "@prisma/client";
 import { SubPekerjaanForm, SubPekerjaanSchema } from "@/schema/sub-pekerjaan";
 import SelectSatuan from "@/components/select-satuan";
 import { UpdateSubPekerjaan } from "@/action/sub-pekerjaan";
+import { useParams } from "next/navigation";
 
 type SubPekerjaan = Prisma.Sub_PekerjaanGetPayload<{
   include: {
@@ -31,11 +32,18 @@ export default function EditSubPekerjaanForm({
       notes: subPekerjaan.notes,
       target_volume: subPekerjaan.target_volume,
       id_satuan: subPekerjaan.satuan,
+      bobot: subPekerjaan.bobot ?? 0,
     },
   });
 
+  const params = useParams<{ id: string }>();
+
   const handleOnSubmit = async (data: SubPekerjaanForm) => {
-    const res = await UpdateSubPekerjaan(data, subPekerjaan.id);
+    const res = await UpdateSubPekerjaan(
+      data,
+      subPekerjaan.id,
+      Number(params.id)
+    );
 
     if (res) {
       return notifications.show({
@@ -80,9 +88,27 @@ export default function EditSubPekerjaanForm({
             placeholder={"Target Volume"}
             error={!!error}
             description={error?.message}
+            inputWrapperOrder={["label", "input", "description", "error"]}
           />
         )}
         name={"target_volume"}
+        control={control}
+      />
+
+      <Controller
+        render={({ field, fieldState: { error } }) => (
+          <NumberInput
+            {...field}
+            hideControls
+            label={"Bobot"}
+            placeholder={"Bobot Pekerjaan"}
+            error={!!error}
+            description={error?.message}
+            suffix="%"
+            inputWrapperOrder={["label", "input", "description", "error"]}
+          />
+        )}
+        name={"bobot"}
         control={control}
       />
 

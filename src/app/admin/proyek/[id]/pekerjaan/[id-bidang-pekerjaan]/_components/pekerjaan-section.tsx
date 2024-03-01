@@ -60,7 +60,7 @@ export default function PekerjaanSection({
                     // setSelectedPekerjaan(pekerjaan);
                   }}
                   className={cn(
-                    "justify-between flex items-start shadow-md p-4 rounded-md",
+                    "justify-between flex items-start cursor-pointer shadow-md p-4 rounded-md",
                     currentPekerjaan?.id === id && "bg-gray-100"
                   )}
                 >

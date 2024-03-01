@@ -4,6 +4,7 @@ import { TextInput, NumberInput, Textarea, Button } from "@mantine/core";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { notifications } from "@mantine/notifications";
+import { useParams } from "next/navigation";
 
 import { SubPekerjaanForm, SubPekerjaanSchema } from "@/schema/sub-pekerjaan";
 import SelectSatuan from "@/components/select-satuan";
@@ -24,9 +25,10 @@ export default function AddSubPekerjaanForm({
       notes: "",
     },
   });
+  const params = useParams<{ id: string }>();
 
   const handleOnSubmit = async (data: SubPekerjaanForm) => {
-    const res = await RegisterSubPekerjaan(data);
+    const res = await RegisterSubPekerjaan(data, Number(params.id));
 
     if (res) {
       return notifications.show({
@@ -70,10 +72,29 @@ export default function AddSubPekerjaanForm({
             label={"Target"}
             placeholder={"Target Volume"}
             error={!!error}
+            thousandSeparator={","}
             description={error?.message}
+            inputWrapperOrder={["label", "input", "description", "error"]}
           />
         )}
         name={"target_volume"}
+        control={control}
+      />
+
+      <Controller
+        render={({ field, fieldState: { error } }) => (
+          <NumberInput
+            {...field}
+            hideControls
+            label={"Bobot"}
+            placeholder={"Bobot Pekerjaan"}
+            error={!!error}
+            description={error?.message}
+            suffix="%"
+            inputWrapperOrder={["label", "input", "description", "error"]}
+          />
+        )}
+        name={"bobot"}
         control={control}
       />
 

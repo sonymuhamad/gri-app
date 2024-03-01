@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import { MantineProvider } from "@mantine/core";
+import { MantineProvider, createTheme } from "@mantine/core";
 const inter = Inter({ subsets: ["latin"] });
 import { Notifications } from "@mantine/notifications";
 
