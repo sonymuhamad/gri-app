@@ -99,7 +99,7 @@ function EachSubPekerjaan({
         </div>
         <div className="flex flex-col">
           <label className="text-gray-400 font-semibold">Bobot Pekerjaan</label>
-          <span className="text-gray-700">{bobot} %</span>
+          <span className="text-gray-700">{bobot ?? 0} %</span>
         </div>
       </div>
       <div className="flex flex-col">

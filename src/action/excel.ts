@@ -312,6 +312,7 @@ export async function DownloadExcel({ proyek }: { proyek: Proyek | null }) {
           satuan: { nama: namaSatuan },
           laporan_harian,
           target_volume,
+          bobot,
         } = subPekerjaan;
 
         const totalVolume = laporan_harian.reduce((prev, current) => {
@@ -319,16 +320,19 @@ export async function DownloadExcel({ proyek }: { proyek: Proyek | null }) {
         }, 0);
 
         const percentage = (totalVolume / target_volume) * 100;
-
         const fixedPercentage = percentage > 100 ? 100 : percentage;
-        const stringPercentage = fixedPercentage.toFixed(2);
-        totalPercentage += fixedPercentage;
+
+        const percentageFromBobot = (fixedPercentage * (bobot ?? 0)) / 100;
+
+        const stringPercentage = percentageFromBobot.toFixed(2);
+        totalPercentage += percentageFromBobot;
 
         mergeAndSetBorderFullRow(row);
         addText(row, 3, `- ${nama}`, 9, false, "left");
         addText(row, 8, namaSatuan, 9, false, "center");
         addText(row, 9, totalVolume.toFixed(2), 9, false, "right");
         addText(row, 10, `${stringPercentage}%`, 9, false, "right");
+        addText(row, 11, `${fixedPercentage}%`, 9, false, "right");
 
         row++;
       });
