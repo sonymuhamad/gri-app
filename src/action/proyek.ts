@@ -81,3 +81,38 @@ export async function GetDetailProyek(id?: number) {
     },
   });
 }
+
+export async function GetDetailProyekWithDateFilter(
+  id?: number,
+  startTime?: Date,
+  endTime?: Date
+) {
+  return await prisma.proyek.findUnique({
+    where: {
+      id: Number(id),
+    },
+    include: {
+      bidang_pekerjaan: {
+        include: {
+          pekerjaan: {
+            include: {
+              sub_pekerjaan: {
+                include: {
+                  satuan: true,
+                  laporan_harian: {
+                    where: {
+                      created_at: {
+                        lte: endTime,
+                        gte: startTime,
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  });
+}

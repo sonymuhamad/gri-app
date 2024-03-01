@@ -1,6 +1,6 @@
 "use client";
 
-import { GetDetailProyek } from "@/action/proyek";
+import { GetDetailProyekWithDateFilter } from "@/action/proyek";
 import { Prisma } from "@prisma/client";
 import { decompressFromEncodedURIComponent } from "lz-string";
 import { useSearchParams } from "next/navigation";
@@ -33,6 +33,8 @@ export default function DownloadExcelSection() {
 
   const searchParams = useSearchParams(); // as proyek
   const p = searchParams.get("p");
+  const s = searchParams.get("s");
+  const e = searchParams.get("e");
 
   const value = useMemo(() => {
     if (!p) return;
@@ -44,18 +46,42 @@ export default function DownloadExcelSection() {
     }
   }, [p]);
 
+  const startTime = useMemo(() => {
+    if (!s) return;
+
+    try {
+      return new Date(s);
+    } catch (e) {
+      return;
+    }
+  }, [s]);
+
+  const endTime = useMemo(() => {
+    if (!e) return;
+
+    try {
+      return new Date(e);
+    } catch (e) {
+      return;
+    }
+  }, [e]);
+
   useEffect(() => {
     if (!value?.id) {
       setProyek(null);
     }
     const fetch = async () => {
       if (value?.id) {
-        const proyek = await GetDetailProyek(value?.id);
+        const proyek = await GetDetailProyekWithDateFilter(
+          value?.id,
+          startTime,
+          endTime
+        );
         setProyek(proyek);
       }
     };
     fetch();
-  }, [value?.id]);
+  }, [value?.id, startTime, endTime]);
 
   return (
     <Button

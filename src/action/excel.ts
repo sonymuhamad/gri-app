@@ -332,7 +332,6 @@ export async function DownloadExcel({ proyek }: { proyek: Proyek | null }) {
         addText(row, 8, namaSatuan, 9, false, "center");
         addText(row, 9, totalVolume.toFixed(2), 9, false, "right");
         addText(row, 10, `${stringPercentage}%`, 9, false, "right");
-        addText(row, 11, `${fixedPercentage}%`, 9, false, "right");
 
         row++;
       });
