@@ -38,6 +38,18 @@ export function getTodayAndTomorrow() {
   return [today, tomorrow];
 }
 
+export function addOneDay(date?: Date) {
+  if (!date) return;
+  date.setDate(date.getDate() + 1);
+  return date;
+}
+
+export function substractOneDay(date?: Date) {
+  if (!date) return;
+  date.setDate(date.getDate() - 1);
+  return date;
+}
+
 export function isValidDate(dateString: string) {
   const dateRegex = /^(0[1-9]|[1-2][0-9]|3[0-1])\/(0[1-9]|1[0-2])\/\d{4}$/;
   return dateRegex.test(dateString);

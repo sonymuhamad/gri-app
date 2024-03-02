@@ -6,6 +6,7 @@ import BidangPekerjaanFilter from "./_components/bidang-pekerjaan-filter";
 import TableReport from "./_components/table-report";
 import DownloadExcelSection from "./_components/download-excel";
 import ReportProyekDateFilter from "./_components/date-filter";
+import { addOneDay, substractOneDay } from "@/lib/utils";
 
 export default async function ReportPage({
   searchParams: { p, b, s, e },
@@ -75,8 +76,8 @@ export default async function ReportPage({
       },
       id_bidang_pekerjaan: idBidangPekerjaan,
       created_at: {
-        lte: endTime,
-        gte: startTime,
+        lte: addOneDay(endTime),
+        gte: substractOneDay(startTime),
       },
     },
     include: {
