@@ -9,6 +9,10 @@ import {
   CartesianGrid,
   Tooltip,
   Legend,
+  ResponsiveContainer,
+  Text,
+  Brush,
+  ReferenceLine,
 } from "recharts";
 import { useState, useEffect, useMemo } from "react";
 import { Prisma, Proyek } from "@prisma/client";
@@ -30,6 +34,18 @@ type SubPekerjaan = Prisma.Sub_PekerjaanGetPayload<{
     laporan_harian: true;
   };
 }>;
+
+const CustomTooltip = ({ active, payload, label }: any) => {
+  if (active && payload && payload.length) {
+    return (
+      <div className="custom-tooltip">
+        <p className="label">{`${label} : ${payload[0].value}%`}</p>
+      </div>
+    );
+  }
+
+  return null;
+};
 
 export default function Charts() {
   const [subPekerjaan, setSubPekerjaan] = useState<SubPekerjaan[]>([]);
@@ -76,30 +92,61 @@ export default function Charts() {
   }, [subPekerjaan]);
 
   return (
-    <div className="w-full p">
+    <ResponsiveContainer width={"100%"} height={500}>
       <BarChart
-        width={950}
-        height={300}
         data={dataSubPekerjaanForChart}
         margin={{
           top: 5,
           right: 30,
           left: 20,
-          bottom: 5,
+          bottom: 50,
         }}
       >
         <CartesianGrid strokeDasharray="3 3" />
-        <XAxis dataKey="nama" display={""} />
-        <YAxis />
-        <Tooltip />
-        <Legend />
+        <XAxis
+          dataKey="nama"
+          interval={0}
+          padding={{ left: 30, right: 30 }}
+          tick={<CustomXAxisTick />}
+        />
+        <YAxis domain={[0, 100]} tickFormatter={(value) => `${value}%`} />
+        <Tooltip content={<CustomTooltip />} />
+
+        <Legend verticalAlign="top" wrapperStyle={{ lineHeight: "40px" }} />
+        <ReferenceLine y={0} stroke="#000" />
+        <Brush
+          dataKey="nama"
+          padding={{ top: 100 }}
+          height={30}
+          stroke="#8884d8"
+          y={460}
+        />
+
         <Bar
           dataKey="percentage"
           fill="#8884d8"
-          name={"Pekerjaan"}
+          name={"Progress Pekerjaan"}
           activeBar={<Rectangle fill="pink" stroke="blue" />}
         />
       </BarChart>
-    </div>
+    </ResponsiveContainer>
   );
+}
+
+function CustomXAxisTick({ x, y, payload }: any) {
+  if (payload && payload.value) {
+    return (
+      <Text
+        fontSize={"12px"}
+        width={"12px"}
+        x={x}
+        y={y}
+        textAnchor="middle"
+        verticalAnchor="start"
+      >
+        {payload.value}
+      </Text>
+    );
+  }
+  return null;
 }
