@@ -75,7 +75,7 @@ export default function DownloadExcelSection() {
       if (value?.id) {
         const proyek = await GetDetailProyekWithDateFilter(
           value?.id,
-          substractOneDay(startTime),
+          startTime,
           addOneDay(endTime)
         );
         setProyek(proyek);

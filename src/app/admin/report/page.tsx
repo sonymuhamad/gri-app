@@ -77,7 +77,7 @@ export default async function ReportPage({
       id_bidang_pekerjaan: idBidangPekerjaan,
       created_at: {
         lte: addOneDay(endTime),
-        gte: substractOneDay(startTime),
+        gte: startTime,
       },
     },
     include: {

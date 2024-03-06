@@ -130,27 +130,6 @@ export async function DownloadExcel({ proyek }: { proyek: Proyek | null }) {
     };
   };
 
-  const addImage = async (
-    fileUrl: string,
-    width: number,
-    height: number,
-    col: number
-  ) => {
-    const result = await toDataURL(fileUrl);
-    const splitted = fileUrl.split(".");
-    const extName = splitted[splitted.length - 1];
-
-    const imageId2 = workbook.addImage({
-      base64: result.base64Url,
-      extension: extName,
-    });
-
-    worksheet.addImage(imageId2, {
-      tl: { col, row: 2 },
-      ext: { width, height },
-    });
-  };
-
   worksheet.mergeCells(2, 2, 6, 6);
   worksheet.mergeCells(2, 7, 6, 10);
   worksheet.mergeCells(2, 11, 6, 13);
@@ -173,7 +152,7 @@ export async function DownloadExcel({ proyek }: { proyek: Proyek | null }) {
   addTextTitle(10, 2, "TANGGAL :");
   addTextTitle(11, 2, "LOKASI :");
   addTextTitle(8, 4, proyek.nama, true);
-
+  addTextTitle(10, 4, proyek.tanggal.toLocaleDateString(), true);
   addTextTitle(11, 4, proyek.lokasi, true);
 
   mergeHeaderAndSetBorder("B13:B15", "B13");
@@ -290,9 +269,13 @@ export async function DownloadExcel({ proyek }: { proyek: Proyek | null }) {
   );
 
   let row = 21;
+  let totalBobotDasarProyek = 0;
+  let totalBobotProyek = 0;
 
   proyek.bidang_pekerjaan.forEach((bidangPekerjaan) => {
-    let totalPercentage = 0;
+    let totalBobotPercentage = 0;
+    let totalBobotDasar = 0;
+
     const { kode, nama, pekerjaan } = bidangPekerjaan;
     mergeAndSetBorderFullRow(row);
     addText(row, 2, kode, 9, true, "center");
@@ -319,33 +302,53 @@ export async function DownloadExcel({ proyek }: { proyek: Proyek | null }) {
           return current.volume + prev;
         }, 0);
 
+        const currentBobot = bobot ?? 0;
         const percentage = (totalVolume / target_volume) * 100;
         const fixedPercentage = percentage > 100 ? 100 : percentage;
+        const stringPercentage = fixedPercentage.toFixed(2);
 
-        const percentageFromBobot = (fixedPercentage * (bobot ?? 0)) / 100;
+        const percentageFromBobot = (fixedPercentage * currentBobot) / 100;
+        const stringPercentageBobot = percentageFromBobot.toFixed(2);
 
-        const stringPercentage = percentageFromBobot.toFixed(2);
-        totalPercentage += percentageFromBobot;
+        totalBobotPercentage += percentageFromBobot;
+        totalBobotDasar += currentBobot;
 
         mergeAndSetBorderFullRow(row);
         addText(row, 3, `- ${nama}`, 9, false, "left");
         addText(row, 8, namaSatuan, 9, false, "center");
         addText(row, 9, totalVolume.toFixed(2), 9, false, "right");
-        addText(row, 10, `${stringPercentage}%`, 9, false, "right");
+        addText(row, 10, `${currentBobot.toFixed(2)}%`, 9, false, "right");
+        addText(row, 13, `${stringPercentage}%`, 9, false, "right");
+        addText(row, 14, `${stringPercentageBobot}%`, 9, false, "right");
 
         row++;
       });
     });
 
+    totalBobotDasarProyek += totalBobotDasar;
+    totalBobotProyek += totalBobotPercentage;
+
     mergeAndSetBorderAndFillFullRow(row);
     addText(row, 3, nama, 9, true, "center");
-    addText(row, 10, `${totalPercentage.toFixed(2)}%`, 9, true, "right");
+    addText(row, 10, `${totalBobotDasar.toFixed(2)}%`, 9, true, "right");
     addText(row, 12, `0.00%`, 9, true, "right");
-    addText(row, 14, `0.00%`, 9, true, "right");
+    addText(row, 14, `${totalBobotPercentage.toFixed(2)}%`, 9, true, "right");
     addText(row, 16, `0.00%`, 9, true, "right");
     row++;
   });
 
+  totalBobotDasarProyek =
+    totalBobotDasarProyek > 100 ? 100 : totalBobotDasarProyek;
+  totalBobotProyek = totalBobotProyek > 100 ? 100 : totalBobotProyek;
+
+  mergeAndSetBorderAndFillFullRow(row);
+  addText(row, 3, "", 9, true, "center");
+  addText(row, 10, `${totalBobotDasarProyek.toFixed(2)}%`, 9, true, "right");
+  addText(row, 12, `0.00%`, 9, true, "right");
+  addText(row, 14, `${totalBobotProyek.toFixed(2)}%`, 9, true, "right");
+  addText(row, 16, `0.00%`, 9, true, "right");
+
+  row++;
   row++;
 
   mergeCellsAndSetBorder(`B${row}:F${row + 5}`, `B${row}`);
