@@ -38,6 +38,7 @@ const renderActiveShape = (props: any) => {
     percent,
     value,
     name,
+    label,
   } = props;
   const sin = Math.sin(-RADIAN * midAngle);
   const cos = Math.cos(-RADIAN * midAngle);
@@ -84,7 +85,7 @@ const renderActiveShape = (props: any) => {
         textAnchor={textAnchor}
         fill="#333"
       >
-        {name}
+        {payload.label}
       </text>
       <text
         x={ex + (cos >= 0 ? 1 : -1) * 12}
@@ -127,11 +128,10 @@ export default function PieChartProyek({ proyek }: { proyek: Proyek }) {
 
   const data = [
     {
-      name: proyek.nama,
       value: percentageProyek,
+      label: proyek.nama,
     },
     {
-      name: proyek.nama,
       value: 100 - percentageProyek,
     },
   ];
