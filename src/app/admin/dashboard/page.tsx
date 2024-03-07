@@ -10,9 +10,7 @@ export default async function DashboardPage() {
     <div className="flex flex-col space-y-6">
       <h1 className="text-2xl font-bold">Dashboard Page</h1>
 
-      <div className="space-x-12 flex flex-row">
-        <ChartProyekFilter />
-      </div>
+      <ChartProyekFilter />
 
       <Charts />
     </div>

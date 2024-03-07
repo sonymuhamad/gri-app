@@ -1,10 +1,15 @@
 import { notFound } from "next/navigation";
 import dayjs from "dayjs";
 import { Badge } from "@mantine/core";
+import dynamic from "next/dynamic";
 
 import prisma from "@/db/db";
 import TambahBidangPekerjaanButton from "./_components/add-button";
 import TableBidangPekerjaan from "./_components/table-bidang-pekerjaan";
+
+const PieChartProyek = dynamic(() => import("./_components/pie-chart-proyek"), {
+  ssr: false,
+});
 
 export default async function DetailProyekPage({
   params,
@@ -18,7 +23,20 @@ export default async function DetailProyekPage({
       id: Number(id),
     },
     include: {
-      bidang_pekerjaan: true,
+      bidang_pekerjaan: {
+        include: {
+          pekerjaan: {
+            include: {
+              sub_pekerjaan: {
+                include: {
+                  satuan: true,
+                  laporan_harian: true,
+                },
+              },
+            },
+          },
+        },
+      },
     },
   });
 
@@ -56,13 +74,17 @@ export default async function DetailProyekPage({
             {is_active ? "Active" : "Inactive"}
           </Badge>
         </div>
-        <div className="grid grid-cols-2 gap-12 mb-4">
-          {data.map(({ value, label }) => (
-            <div className="flex flex-col" key={`${value}-${label}`}>
-              <label className="text-gray-400 font-semibold">{label}</label>
-              <span className="text-gray-700">{value}</span>
-            </div>
-          ))}
+
+        <div className="flex flex-row justify-between ">
+          <div className="flex flex-col space-y-3">
+            {data.map(({ value, label }) => (
+              <div className="flex flex-col" key={`${value}-${label}`}>
+                <label className="text-gray-400 font-semibold">{label}</label>
+                <span className="text-gray-700">{value}</span>
+              </div>
+            ))}
+          </div>
+          <PieChartProyek proyek={proyek} />
         </div>
       </section>
 

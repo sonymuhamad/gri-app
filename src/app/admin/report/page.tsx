@@ -93,11 +93,11 @@ export default async function ReportPage({
       <div className="space-y-6 flex flex-col">
         <div className="space-x-12 flex flex-row">
           <ProyekFilter />
-          <BidangPekerjaanFilter />
+          <div className="w-64">
+            <ReportProyekDateFilter />
+          </div>
+          {/* <BidangPekerjaanFilter /> */}
           <DownloadExcelSection />
-        </div>
-        <div className="w-64">
-          <ReportProyekDateFilter />
         </div>
       </div>
 

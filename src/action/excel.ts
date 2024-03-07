@@ -173,38 +173,35 @@ export async function DownloadExcel({ proyek }: { proyek: Proyek | null }) {
   mergeHeaderAndSetBorder("J15:J15", "J15");
   addText(15, 10, "%");
   mergeHeaderAndSetBorder("K15:K15", "K15");
-  addText(15, 11, "%");
+  addText(15, 11, "");
   mergeHeaderAndSetBorder("L15:L15", "L15");
   addText(15, 12, "%");
   mergeHeaderAndSetBorder("M15:M15", "M15");
   addText(15, 13, "%");
   mergeHeaderAndSetBorder("N15:N15", "N15");
-  addText(15, 14, "%");
+  addText(15, 14, "");
   mergeHeaderAndSetBorder("O15:O15", "O15");
   addText(15, 15, "%");
   mergeHeaderAndSetBorder("P15:P15", "P15");
   addText(15, 16, "%");
 
-  mergeHeaderAndSetBorder("K13:L13", "K13");
+  mergeHeaderAndSetBorder("K13:M13", "K13");
   addText(13, 11, "S/D PERIODE LALU");
 
-  mergeHeaderAndSetBorder("M13:N13", "M13");
-  addText(13, 13, "S/D PERIODE INI");
-
-  mergeHeaderAndSetBorder("O13:P13", "O13");
-  addText(13, 15, "S/D PERIODE INI");
+  mergeHeaderAndSetBorder("N13:P13", "N13");
+  addText(13, 14, "S/D PERIODE INI");
 
   mergeHeaderAndSetBorder("K14:K14", "K14");
-  addText(14, 11, "PROGRESS");
+  addText(14, 11, "VOLUME");
 
   mergeHeaderAndSetBorder("L14:L14", "L14");
-  addText(14, 12, "BOBOT");
+  addText(14, 12, "PROGRESS");
 
   mergeHeaderAndSetBorder("M14:M14", "M14");
-  addText(14, 13, "PROGRESS");
+  addText(14, 13, "BOBOT");
 
   mergeHeaderAndSetBorder("N14:N14", "N14");
-  addText(14, 14, "BOBOT");
+  addText(14, 14, "VOLUME");
 
   mergeHeaderAndSetBorder("O14:O14", "O14");
   addText(14, 15, "PROGRESS");
@@ -316,10 +313,11 @@ export async function DownloadExcel({ proyek }: { proyek: Proyek | null }) {
         mergeAndSetBorderFullRow(row);
         addText(row, 3, `- ${nama}`, 9, false, "left");
         addText(row, 8, namaSatuan, 9, false, "center");
-        addText(row, 9, totalVolume.toFixed(2), 9, false, "right");
+        addText(row, 9, target_volume.toFixed(2), 9, false, "right");
         addText(row, 10, `${currentBobot.toFixed(2)}%`, 9, false, "right");
-        addText(row, 13, `${stringPercentage}%`, 9, false, "right");
-        addText(row, 14, `${stringPercentageBobot}%`, 9, false, "right");
+        addText(row, 14, totalVolume.toFixed(2), 9, false, "right");
+        addText(row, 15, `${stringPercentage}%`, 9, false, "right");
+        addText(row, 16, `${stringPercentageBobot}%`, 9, false, "right");
 
         row++;
       });
@@ -332,8 +330,7 @@ export async function DownloadExcel({ proyek }: { proyek: Proyek | null }) {
     addText(row, 3, nama, 9, true, "center");
     addText(row, 10, `${totalBobotDasar.toFixed(2)}%`, 9, true, "right");
     addText(row, 12, `0.00%`, 9, true, "right");
-    addText(row, 14, `${totalBobotPercentage.toFixed(2)}%`, 9, true, "right");
-    addText(row, 16, `0.00%`, 9, true, "right");
+    addText(row, 16, `${totalBobotPercentage.toFixed(2)}%`, 9, true, "right");
     row++;
   });
 
@@ -345,8 +342,7 @@ export async function DownloadExcel({ proyek }: { proyek: Proyek | null }) {
   addText(row, 3, "", 9, true, "center");
   addText(row, 10, `${totalBobotDasarProyek.toFixed(2)}%`, 9, true, "right");
   addText(row, 12, `0.00%`, 9, true, "right");
-  addText(row, 14, `${totalBobotProyek.toFixed(2)}%`, 9, true, "right");
-  addText(row, 16, `0.00%`, 9, true, "right");
+  addText(row, 16, `${totalBobotProyek.toFixed(2)}%`, 9, true, "right");
 
   row++;
   row++;

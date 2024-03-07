@@ -57,6 +57,8 @@ export default function ReportProyekDateFilter() {
   return (
     <DatePickerInput
       type="range"
+      // @ts-ignore
+      placeholder={"Filter date"}
       clearable
       value={fixedValue}
       onChange={(value) => {
